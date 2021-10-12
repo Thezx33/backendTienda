@@ -14,14 +14,14 @@ const router = Router();
 
 router.get('/', getProducts);
 
-router.get('/:id', getProductId);
+router.get('/search', getProductsName);
 
-router.get('/search/:name', getProductsName);
+router.get('/:id', getProductId);
 
 router.put('/:id', updateProductId);
 
 router.post('/', createProduct);
 
-router.delete( '/:id', deleteProductId);
+router.delete('/:id', deleteProductId);
 
 export default router;

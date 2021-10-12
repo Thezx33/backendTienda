@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { Op } from 'sequelize';
 import Product from '../models/product';
 
 export const getProducts = async ( req: Request, res: Response ) => {
@@ -34,8 +35,18 @@ export const getProductId = async( req: Request, res: Response ) => {
 
 export const getProductsName = async( req: Request, res: Response ) => {
 
+    const { search } = req.query;
+
+    const products = await Product.findAll({
+        where: {
+            name: {
+                [Op.like]: `%${search}%`
+            }
+        }
+    });
+
     res.json({
-        msg: 'Products name'
+        products
     });
 
 }
@@ -52,7 +63,7 @@ export const createProduct = async( req: Request, res: Response ) => {
 
     res.json({
         msg: 'Create Product'
-    })
+    });
 
 }
 

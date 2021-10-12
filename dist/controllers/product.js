@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteProductId = exports.createProduct = exports.updateProductId = exports.getProductsName = exports.getProductId = exports.getProducts = void 0;
+const sequelize_1 = require("sequelize");
 const product_1 = __importDefault(require("../models/product"));
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const products = yield product_1.default.findAll();
@@ -38,8 +39,16 @@ const getProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.getProductId = getProductId;
 const getProductsName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { search } = req.query;
+    const products = yield product_1.default.findAll({
+        where: {
+            name: {
+                [sequelize_1.Op.like]: `%${search}%`
+            }
+        }
+    });
     res.json({
-        msg: 'Products name'
+        products
     });
 });
 exports.getProductsName = getProductsName;
