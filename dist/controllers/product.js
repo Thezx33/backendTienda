@@ -26,9 +26,15 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.getProducts = getProducts;
 const getProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({
-        msg: 'Product Id'
-    });
+    const { id } = req.params;
+    const product = yield product_1.default.findByPk(id);
+    if (!product) {
+        res.status(404).json({
+            msg: `No existe un producto con el id ${id}`
+        });
+        return;
+    }
+    res.json(product);
 });
 exports.getProductId = getProductId;
 const getProductsName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

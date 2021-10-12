@@ -18,9 +18,17 @@ export const getProducts = async ( req: Request, res: Response ) => {
 
 export const getProductId = async( req: Request, res: Response ) => {
     
-    res.json({
-        msg: 'Product Id'
-    });
+    const { id } = req.params;
+    const product = await Product.findByPk( id );
+
+    if( !product ) {
+        res.status(404).json({
+            msg: `No existe un producto con el id ${ id }`
+        });
+        return;
+    }
+    
+    res.json( product );
 
 }
 
