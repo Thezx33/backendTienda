@@ -6,7 +6,7 @@ const password: string = process.env.PASSWORD || '';
 const host: string = process.env.HOST || '';
 
 
-const db = new Sequelize(dbName, username, password, {
+const db = new Sequelize('Test', 'root', 'Descargar123.', {
     host,
     dialect: 'mysql'
 });

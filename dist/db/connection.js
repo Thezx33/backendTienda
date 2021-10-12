@@ -5,7 +5,7 @@ const dbName = process.env.DBNAME || '';
 const username = process.env.USERNAME || '';
 const password = process.env.PASSWORD || '';
 const host = process.env.HOST || '';
-const db = new sequelize_1.Sequelize(dbName, username, password, {
+const db = new sequelize_1.Sequelize('Test', 'root', 'Descargar123.', {
     host,
     dialect: 'mysql'
 });
