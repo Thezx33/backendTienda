@@ -15,7 +15,7 @@ const Product = db.define('Product', {
     description: {
         type: DataTypes.STRING(3000)
     },
-    barCode: {
+    barcode: {
         type:DataTypes.STRING(20),
         allowNull: false,
         unique: true

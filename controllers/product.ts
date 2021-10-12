@@ -59,12 +59,66 @@ export const updateProductId = async( req: Request, res: Response ) => {
 
 }
 
-export const createProduct = async( req: Request, res: Response ) => {
+export const createProduct = async ( req: Request, res: Response ) => {
 
-    res.json({
-        msg: 'Create Product'
-    });
+    const { body } = req;
 
+    const product = {
+        name: body.name,
+        price: body.price,
+        description: body.description || '',
+        barcode: body.barcode,
+        userId: body.userId,
+        providerId: body.providerId
+    }
+
+    console.log( product );
+
+    try {
+        
+        const nameExists = await Product.findOne({
+            where: {
+                name: product.name
+            }
+        });
+
+        if( nameExists ) {
+            res.status(400).json({
+                msg: `Ya existe un producto con el nombre ${ product.name }`
+            });
+
+            return;
+        }
+
+        const barcodeExists = await Product.findOne({
+            where: {
+                barCode: product.barcode
+            }
+        });
+
+        if( barcodeExists ) {
+            res.status(400).json({
+                msg: `Ya existe un producto con el código de barras ${ product.barcode }`
+            });
+
+            return;
+        }
+
+
+        // TODO: Validaciones para comprobar que el id del proveedor existe.
+        // TODO: Validaciones para comprobar que el id del usuario existe.
+
+
+        const newProduct = await Product.create( product );
+
+        res.json( newProduct );
+        
+    } catch (error: any) {
+        console.log( error );
+        res.json({
+            msg: 'Hable con el administrador'
+        })
+    }
 }
 
 export const deleteProductId = async( req: Request, res: Response ) => {

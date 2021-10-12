@@ -18,7 +18,7 @@ const Product = connection_1.default.define('Product', {
     description: {
         type: sequelize_1.DataTypes.STRING(3000)
     },
-    barCode: {
+    barcode: {
         type: sequelize_1.DataTypes.STRING(20),
         allowNull: false,
         unique: true

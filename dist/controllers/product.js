@@ -59,9 +59,50 @@ const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.updateProductId = updateProductId;
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({
-        msg: 'Create Product'
-    });
+    const { body } = req;
+    const product = {
+        name: body.name,
+        price: body.price,
+        description: body.description || '',
+        barcode: body.barcode,
+        userId: body.userId,
+        providerId: body.providerId
+    };
+    console.log(product);
+    try {
+        const nameExists = yield product_1.default.findOne({
+            where: {
+                name: product.name
+            }
+        });
+        if (nameExists) {
+            res.status(400).json({
+                msg: `Ya existe un producto con el nombre ${product.name}`
+            });
+            return;
+        }
+        const barcodeExists = yield product_1.default.findOne({
+            where: {
+                barCode: product.barcode
+            }
+        });
+        if (barcodeExists) {
+            res.status(400).json({
+                msg: `Ya existe un producto con el código de barras ${product.barcode}`
+            });
+            return;
+        }
+        // TODO: Validaciones para comprobar que el id del proveedor existe.
+        // TODO: Validaciones para comprobar que el id del usuario existe.
+        const newProduct = yield product_1.default.create(product);
+        res.json(newProduct);
+    }
+    catch (error) {
+        console.log(error);
+        res.json({
+            msg: 'Hable con el administrador'
+        });
+    }
 });
 exports.createProduct = createProduct;
 const deleteProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
