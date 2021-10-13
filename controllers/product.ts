@@ -53,8 +53,44 @@ export const getProductsName = async( req: Request, res: Response ) => {
 
 export const updateProductId = async( req: Request, res: Response ) => {
 
+    const { id, state, createdAt, updatedAt, ...product } = req.body;
+
+    const productExists = await Product.findByPk( id );
+
+    if( !productExists ) {
+        res.status(400).json({
+            msg: `Producto con el id ${ id } no existe`
+        });
+    }
+
+    const nameExists = await Product.findOne({
+        where: {
+            name: product.name
+        }
+    });
+
+    if( nameExists ) {
+        res.status(400).json({
+            msg: `Ya existe un producto con el nombre ${ product.name }`
+        });
+    }
+
+    const barcodeExists = await Product.findOne({
+        where: {
+            barcode: product.barcode
+        }
+    });
+
+    if( barcodeExists ) {
+        res.status(400).json({
+            msg: `Ya existe un producto con el código ${ product.barcode }`
+        });
+    }
+
+    // TODO: Verificar que el proveedor exista
+
     res.json({
-        msg: 'Update Id'
+        product
     });
 
 }
