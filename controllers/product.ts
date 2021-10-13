@@ -20,7 +20,14 @@ export const getProducts = async ( req: Request, res: Response ) => {
 export const getProductId = async( req: Request, res: Response ) => {
     
     const { id } = req.params;
-    const product = await Product.findByPk( id );
+    const product = await Product.findOne({
+        where:{
+            [Op.and]: [
+                { state: true },
+                { id }
+            ]
+        }
+    });
 
     if( !product ) {
         res.status(404).json({
@@ -28,6 +35,8 @@ export const getProductId = async( req: Request, res: Response ) => {
         });
         return;
     }
+    
+    console.log( product );
     
     res.json( product );
 
@@ -39,6 +48,12 @@ export const getProductsName = async( req: Request, res: Response ) => {
 
     const products = await Product.findAll({
         where: {
+            [Op.and]: [
+                {
+                    state: true
+                }
+                
+            ],
             name: {
                 [Op.like]: `%${search}%`
             }
@@ -53,40 +68,52 @@ export const getProductsName = async( req: Request, res: Response ) => {
 
 export const updateProductId = async( req: Request, res: Response ) => {
 
-    const { id, state, createdAt, updatedAt, ...product } = req.body;
+    const { id } = req.params;
+    const { id: asd, state, createdAt, updatedAt, ...rest } = req.body;
 
-    const productExists = await Product.findByPk( id );
+    // const product = await Product.findByPk( id );
+    const product = await Product.findOne({
+        where:{
+            [Op.and]: [
+                { state: true },
+                { id }
+            ]
+        }
+    });
 
-    if( !productExists ) {
-        res.status(400).json({
+    if( !product ) {
+        res.status(404).json({
             msg: `Producto con el id ${ id } no existe`
         });
     }
 
     const nameExists = await Product.findOne({
         where: {
-            name: product.name
+            name: rest.name
         }
     });
 
     if( nameExists ) {
         res.status(400).json({
-            msg: `Ya existe un producto con el nombre ${ product.name }`
+            msg: `Ya existe un producto con el nombre ${ rest.name }`
         });
     }
 
     const barcodeExists = await Product.findOne({
         where: {
-            barcode: product.barcode
+            barcode: rest.barcode
         }
     });
 
     if( barcodeExists ) {
         res.status(400).json({
-            msg: `Ya existe un producto con el código ${ product.barcode }`
+            msg: `Ya existe un producto con el código ${ rest.barcode }`
         });
     }
+    
+    await product?.update( rest );
 
+    
     // TODO: Verificar que el proveedor exista
 
     res.json({
@@ -159,8 +186,27 @@ export const createProduct = async ( req: Request, res: Response ) => {
 
 export const deleteProductId = async( req: Request, res: Response ) => {
 
-    res.json({
-        msg: 'Delete Id'
+    const { id } = req.params;
+
+    // const product = await Product.findByPk( id );
+    const product = await Product.findOne({
+        where:{
+            [Op.and]: [
+                { state: true },
+                { id }
+            ]
+        }
     });
+
+    if( !product ) {
+        res.status(404).json({
+            msg: `Producto con el id ${ id } no existe`
+        });
+    }
+
+    // Eliminación lógica
+    await product?.update({ state: false });
+
+    res.json(product);
 
 }

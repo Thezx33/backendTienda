@@ -39,13 +39,21 @@ const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getProducts = getProducts;
 const getProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const product = yield product_1.default.findByPk(id);
+    const product = yield product_1.default.findOne({
+        where: {
+            [sequelize_1.Op.and]: [
+                { state: true },
+                { id }
+            ]
+        }
+    });
     if (!product) {
         res.status(404).json({
             msg: `No existe un producto con el id ${id}`
         });
         return;
     }
+    console.log(product);
     res.json(product);
 });
 exports.getProductId = getProductId;
@@ -53,6 +61,11 @@ const getProductsName = (req, res) => __awaiter(void 0, void 0, void 0, function
     const { search } = req.query;
     const products = yield product_1.default.findAll({
         where: {
+            [sequelize_1.Op.and]: [
+                {
+                    state: true
+                }
+            ],
             name: {
                 [sequelize_1.Op.like]: `%${search}%`
             }
@@ -64,33 +77,43 @@ const getProductsName = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.getProductsName = getProductsName;
 const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const _a = req.body, { id, state, createdAt, updatedAt } = _a, product = __rest(_a, ["id", "state", "createdAt", "updatedAt"]);
-    const productExists = yield product_1.default.findByPk(id);
-    if (!productExists) {
-        res.status(400).json({
+    const { id } = req.params;
+    const _a = req.body, { id: asd, state, createdAt, updatedAt } = _a, rest = __rest(_a, ["id", "state", "createdAt", "updatedAt"]);
+    // const product = await Product.findByPk( id );
+    const product = yield product_1.default.findOne({
+        where: {
+            [sequelize_1.Op.and]: [
+                { state: true },
+                { id }
+            ]
+        }
+    });
+    if (!product) {
+        res.status(404).json({
             msg: `Producto con el id ${id} no existe`
         });
     }
     const nameExists = yield product_1.default.findOne({
         where: {
-            name: product.name
+            name: rest.name
         }
     });
     if (nameExists) {
         res.status(400).json({
-            msg: `Ya existe un producto con el nombre ${product.name}`
+            msg: `Ya existe un producto con el nombre ${rest.name}`
         });
     }
     const barcodeExists = yield product_1.default.findOne({
         where: {
-            barcode: product.barcode
+            barcode: rest.barcode
         }
     });
     if (barcodeExists) {
         res.status(400).json({
-            msg: `Ya existe un producto con el código ${product.barcode}`
+            msg: `Ya existe un producto con el código ${rest.barcode}`
         });
     }
+    yield (product === null || product === void 0 ? void 0 : product.update(rest));
     // TODO: Verificar que el proveedor exista
     res.json({
         product
@@ -145,9 +168,24 @@ const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.createProduct = createProduct;
 const deleteProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({
-        msg: 'Delete Id'
+    const { id } = req.params;
+    // const product = await Product.findByPk( id );
+    const product = yield product_1.default.findOne({
+        where: {
+            [sequelize_1.Op.and]: [
+                { state: true },
+                { id }
+            ]
+        }
     });
+    if (!product) {
+        res.status(404).json({
+            msg: `Producto con el id ${id} no existe`
+        });
+    }
+    // Eliminación lógica
+    yield (product === null || product === void 0 ? void 0 : product.update({ state: false }));
+    res.json(product);
 });
 exports.deleteProductId = deleteProductId;
 //# sourceMappingURL=product.js.map
