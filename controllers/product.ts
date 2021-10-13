@@ -4,7 +4,11 @@ import Product from '../models/product';
 
 export const getProducts = async ( req: Request, res: Response ) => {
 
-    const products = await Product.findAll();
+    const products = await Product.findAll({
+        where: {
+            state: true
+        }
+    });
 
     if( products.length === 0 ) {
         res.json({

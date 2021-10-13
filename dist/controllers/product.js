@@ -27,7 +27,11 @@ exports.deleteProductId = exports.createProduct = exports.updateProductId = expo
 const sequelize_1 = require("sequelize");
 const product_1 = __importDefault(require("../models/product"));
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const products = yield product_1.default.findAll();
+    const products = yield product_1.default.findAll({
+        where: {
+            state: true
+        }
+    });
     if (products.length === 0) {
         res.json({
             msg: 'No hay datos en la base de datos'
