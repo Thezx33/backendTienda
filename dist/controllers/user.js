@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserId = exports.updateUserId = exports.getUsersNames = exports.getUserId = exports.getUsers = void 0;
+exports.deleteUserId = exports.updateUserId = exports.createUser = exports.getUsersName = exports.getUserId = exports.getUsers = void 0;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({
         msg: 'get User'
@@ -22,12 +22,18 @@ const getUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     });
 });
 exports.getUserId = getUserId;
-const getUsersNames = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getUsersName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({
         msg: 'get Users Names'
     });
 });
-exports.getUsersNames = getUsersNames;
+exports.getUsersName = getUsersName;
+const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.json({
+        msg: 'user created'
+    });
+});
+exports.createUser = createUser;
 const updateUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({
         msg: 'update User Id'

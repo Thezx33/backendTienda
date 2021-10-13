@@ -16,12 +16,14 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 // Rutas
 const product_1 = __importDefault(require("../routes/product"));
+const user_1 = __importDefault(require("../routes/user"));
 // Conexión
 const connection_1 = __importDefault(require("../db/connection"));
 class Server {
     constructor() {
         this.apiPaths = {
-            products: '/api/products'
+            products: '/api/products',
+            users: '/api/users'
         };
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '8000';
@@ -53,6 +55,7 @@ class Server {
     }
     routes() {
         this.app.use(this.apiPaths.products, product_1.default);
+        this.app.use(this.apiPaths.users, user_1.default);
     }
     listen() {
         this.app.listen(this.port, () => {

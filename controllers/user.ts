@@ -18,10 +18,18 @@ export const getUserId = async ( req: Request, res: Response ) => {
 
 }
 
-export const getUsersNames = async ( req: Request, res: Response ) => {
+export const getUsersName = async ( req: Request, res: Response ) => {
 
     res.json({
         msg: 'get Users Names'
+    });
+
+}
+
+export const createUser = async ( req: Request, res: Response ) => {
+
+    res.json({
+        msg: 'user created'
     });
 
 }
