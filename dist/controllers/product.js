@@ -65,19 +65,24 @@ const getProductsName = (req, res) => __awaiter(void 0, void 0, void 0, function
     const { search } = req.query;
     const products = yield product_1.default.findAll({
         where: {
-            [sequelize_1.Op.and]: [
-                {
-                    state: true
-                }
-            ],
+            // [Op.and]: [
+            //     {
+            //         state: true
+            //     }
+            // ],
+            state: true,
             name: {
                 [sequelize_1.Op.like]: `%${search}%`
             }
         }
     });
-    res.json({
-        products
-    });
+    if (products.length === 0) {
+        res.status(404).json({
+            msg: `No hay productos que coincidan con su búsqueda`
+        });
+        return;
+    }
+    res.json(products);
 });
 exports.getProductsName = getProductsName;
 const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

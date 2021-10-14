@@ -44,7 +44,26 @@ export const getUsersName = async ( req: Request, res: Response ) => {
 
     const { name } = req.query;
 
-    res.json( name );
+    const users = await User.findAll({
+        where: {
+            // [Op.and]: [
+            //     { state: true }
+            // ],
+            state: true,
+            name: {
+                [Op.like]: `%${ name }%`
+            }
+        }
+    });
+
+    if( users.length === 0 ){
+        res.status(404).json({
+            msg: `No hay usuarios que coincidan con su búsqueda`
+        });
+        return;
+    }
+
+    res.json( users );
 
 }
 

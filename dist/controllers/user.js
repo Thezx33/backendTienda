@@ -24,6 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserId = exports.updateUserId = exports.createUser = exports.getUsersName = exports.getUserId = exports.getUsers = void 0;
+const sequelize_1 = require("sequelize");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -55,7 +56,24 @@ const getUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getUserId = getUserId;
 const getUsersName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.query;
-    res.json(name);
+    const users = yield user_1.default.findAll({
+        where: {
+            // [Op.and]: [
+            //     { state: true }
+            // ],
+            state: true,
+            name: {
+                [sequelize_1.Op.like]: `%${name}%`
+            }
+        }
+    });
+    if (users.length === 0) {
+        res.status(404).json({
+            msg: `No hay usuarios que coincidan con su búsqueda`
+        });
+        return;
+    }
+    res.json(users);
 });
 exports.getUsersName = getUsersName;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

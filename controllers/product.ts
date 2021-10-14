@@ -53,21 +53,28 @@ export const getProductsName = async( req: Request, res: Response ) => {
 
     const products = await Product.findAll({
         where: {
-            [Op.and]: [
-                {
-                    state: true
-                }
+            // [Op.and]: [
+            //     {
+            //         state: true
+            //     }
                 
-            ],
+            // ],
+            state: true,
             name: {
                 [Op.like]: `%${search}%`
             }
         }
     });
 
-    res.json({
-        products
-    });
+    if( products.length === 0 ){
+        res.status(404).json({
+            msg: `No hay productos que coincidan con su búsqueda`
+        });
+        
+        return;
+    }
+
+    res.json( products );
 
 }
 
