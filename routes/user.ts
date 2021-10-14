@@ -10,7 +10,7 @@ import {
 } from '../controllers/user';
 
 import { validateFields } from '../middlewares/validate-fields';
-import { emailExists } from '../helpers/db-validators';
+import { emailExists, userExists } from '../helpers/db-validators';
 
 
 const router = Router();
@@ -20,7 +20,10 @@ router.get('/', getUsers);
 
 router.get('/search', getUsersName);
 
-router.get('/:id', getUserId);
+router.get('/:id',[
+    check('id').custom( userExists ),
+    validateFields
+], getUserId);
 
 router.put('/:id', updateUserId);
 

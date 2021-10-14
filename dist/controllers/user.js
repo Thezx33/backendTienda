@@ -24,18 +24,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserId = exports.updateUserId = exports.createUser = exports.getUsersName = exports.getUserId = exports.getUsers = void 0;
+const sequelize_1 = require("sequelize");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({
-        msg: 'get User'
+    const users = yield user_1.default.findAll({
+        where: { state: true }
     });
+    res.json(users);
 });
 exports.getUsers = getUsers;
 const getUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({
-        msg: 'get User Id'
+    const { id } = req.params;
+    const userIsNotDeleted = yield user_1.default.findOne({
+        where: {
+            [sequelize_1.Op.and]: [
+                { id },
+                { state: true }
+            ]
+        }
     });
+    if (!userIsNotDeleted) {
+        res.status(400).json({
+            msg: `El usuario con el id ${id} ha sido eliminado`
+        });
+        return;
+    }
+    res.json(userIsNotDeleted);
 });
 exports.getUserId = getUserId;
 const getUsersName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -18,6 +18,11 @@ const User = connection_1.default.define('User', {
     password: {
         type: sequelize_1.DataTypes.STRING(60),
         allowNull: false
+    },
+    state: {
+        type: sequelize_1.DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
     }
 }, {
     charset: 'utf8',

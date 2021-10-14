@@ -5,17 +5,36 @@ import User from '../models/user';
 
 export const getUsers = async ( req: Request, res: Response ) => {
 
-    res.json({
-        msg: 'get User'
-    });
+    const users = await User.findAll({
+        where: { state: true }
+    })
+
+    res.json( users );
 
 }
 
 export const getUserId = async ( req: Request, res: Response ) => {
 
-    res.json({
-        msg: 'get User Id'
+    const { id } = req.params;
+
+    const userIsNotDeleted = await User.findOne({
+        where: {
+            [Op.and]: [
+                { id },
+                { state: true }
+            ]
+        }
     });
+
+    if( !userIsNotDeleted ) {
+
+        res.status(400).json({
+            msg: `El usuario con el id ${ id } ha sido eliminado`
+        });
+        return;
+    }
+
+    res.json( userIsNotDeleted );
 
 }
 

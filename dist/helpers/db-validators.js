@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.emailExists = void 0;
+exports.userExists = exports.emailExists = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const emailExists = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const emailExists = yield user_1.default.findOne({
@@ -25,4 +25,11 @@ const emailExists = (email) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.emailExists = emailExists;
+const userExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const userExists = yield user_1.default.findByPk(id);
+    if (!userExists) {
+        throw new Error(`El usuario con el id ${id} no existe`);
+    }
+});
+exports.userExists = userExists;
 //# sourceMappingURL=db-validators.js.map
