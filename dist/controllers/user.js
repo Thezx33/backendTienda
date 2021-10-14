@@ -24,6 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserId = exports.updateUserId = exports.createUser = exports.getUsersName = exports.getUserId = exports.getUsers = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json({
@@ -45,15 +46,11 @@ const getUsersName = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getUsersName = getUsersName;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const _a = req.body, { id, state } = _a, userRest = __rest(_a, ["id", "state"]);
-    const emailExists = yield user_1.default.findOne({
-        where: {
-            email: userRest.email
-        }
-    });
-    console.log(emailExists);
-    res.json({
-        msg: 'user created',
-    });
+    // Encriptar contraseña
+    const salt = bcryptjs_1.default.genSaltSync();
+    userRest.password = bcryptjs_1.default.hashSync(userRest.password, salt);
+    const user = yield user_1.default.create(userRest);
+    res.json(user);
 });
 exports.createUser = createUser;
 const updateUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

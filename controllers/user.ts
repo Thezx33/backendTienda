@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
+import bcryptjs from 'bcryptjs';
 import User from '../models/user';
 
 export const getUsers = async ( req: Request, res: Response ) => {
@@ -30,19 +31,13 @@ export const createUser = async ( req: Request, res: Response ) => {
 
     const { id, state, ...userRest } = req.body;
 
-    const emailExists = await User.findOne({
-        where: {
-            email: userRest.email
-        }
-    });
+    // Encriptar contraseña
+    const salt = bcryptjs.genSaltSync();
+    userRest.password = bcryptjs.hashSync( userRest.password, salt );
 
+    const user = await User.create( userRest );
 
-    console.log( emailExists );
-
-    res.json({
-        msg: 'user created',
-        
-    });
+    res.json( user );
 
 }
 
