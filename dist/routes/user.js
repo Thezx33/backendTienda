@@ -12,7 +12,10 @@ router.get('/:id', [
     (0, express_validator_1.check)('id').custom(db_validators_1.userExists),
     validate_fields_1.validateFields
 ], user_1.getUserId);
-router.put('/:id', user_1.updateUserId);
+router.put('/:id', [
+    (0, express_validator_1.check)('id').custom(db_validators_1.userExists),
+    validate_fields_1.validateFields
+], user_1.updateUserId);
 router.post('/', [
     (0, express_validator_1.check)('email', 'El correo no es válido').isEmail(),
     (0, express_validator_1.check)('email').custom(db_validators_1.emailExists),

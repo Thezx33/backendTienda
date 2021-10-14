@@ -1,4 +1,5 @@
-import User from "../models/user"
+import User from '../models/user';
+import { Op } from 'sequelize';
 
 
 export const emailExists = async( email: string ): Promise<void> => {
@@ -17,7 +18,14 @@ export const emailExists = async( email: string ): Promise<void> => {
 
 export const userExists = async ( id: number ): Promise<void> => {
 
-    const userExists = await User.findByPk( id );
+    const userExists = await User.findOne( {
+        where: {
+            [Op.and]: [
+                { id },
+                { state: true }
+            ]
+        }
+    } );
     
     if( !userExists ) {
         throw new Error( `El usuario con el id ${ id } no existe`);

@@ -17,32 +17,34 @@ export const getUserId = async ( req: Request, res: Response ) => {
 
     const { id } = req.params;
 
-    const userIsNotDeleted = await User.findOne({
-        where: {
-            [Op.and]: [
-                { id },
-                { state: true }
-            ]
-        }
-    });
+    const user = await User.findByPk( id );
 
-    if( !userIsNotDeleted ) {
+    // const userIsNotDeleted = await User.findOne({
+    //     where: {
+    //         [Op.and]: [
+    //             { id },
+    //             { state: true }
+    //         ]
+    //     }
+    // });
 
-        res.status(400).json({
-            msg: `El usuario con el id ${ id } ha sido eliminado`
-        });
-        return;
-    }
+    // if( !userIsNotDeleted ) {
 
-    res.json( userIsNotDeleted );
+    //     res.status(400).json({
+    //         msg: `El usuario con el id ${ id } ha sido eliminado`
+    //     });
+    //     return;
+    // }
+
+    res.json( user );
 
 }
 
 export const getUsersName = async ( req: Request, res: Response ) => {
 
-    res.json({
-        msg: 'get Users Names'
-    });
+    const { name } = req.query;
+
+    res.json( name );
 
 }
 
@@ -62,9 +64,36 @@ export const createUser = async ( req: Request, res: Response ) => {
 
 export const updateUserId = async ( req: Request, res: Response ) => {
 
-    res.json({
-        msg: 'update User Id'
+    const { id } = req.params;
+    const { id: userId, state, ...userRest } = req.body;
+
+    const emailExists = await User.findOne({
+        where: {
+            email: userRest.email
+        }
     });
+
+    if( emailExists ) {
+        res.status(400).json({
+            msg: `El email ${ userRest.email } ya existe`
+        });
+        return;
+    }
+
+    if( userRest.password ) {
+
+        const salt = bcryptjs.genSaltSync();
+        userRest.password = bcryptjs.hashSync( userRest.password, salt );
+
+    }
+
+    const user = await User.update( userRest, {
+        where: {
+            id
+        }
+    });
+
+    res.json( user );
 
 }
 

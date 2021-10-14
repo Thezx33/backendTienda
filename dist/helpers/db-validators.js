@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userExists = exports.emailExists = void 0;
 const user_1 = __importDefault(require("../models/user"));
+const sequelize_1 = require("sequelize");
 const emailExists = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const emailExists = yield user_1.default.findOne({
         where: {
@@ -26,7 +27,14 @@ const emailExists = (email) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.emailExists = emailExists;
 const userExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const userExists = yield user_1.default.findByPk(id);
+    const userExists = yield user_1.default.findOne({
+        where: {
+            [sequelize_1.Op.and]: [
+                { id },
+                { state: true }
+            ]
+        }
+    });
     if (!userExists) {
         throw new Error(`El usuario con el id ${id} no existe`);
     }

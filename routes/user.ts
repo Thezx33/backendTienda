@@ -25,7 +25,10 @@ router.get('/:id',[
     validateFields
 ], getUserId);
 
-router.put('/:id', updateUserId);
+router.put('/:id',[
+    check('id').custom( userExists ),
+    validateFields
+],updateUserId);
 
 router.post('/',[
     check('email', 'El correo no es válido').isEmail(),

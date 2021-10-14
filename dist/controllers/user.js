@@ -24,7 +24,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserId = exports.updateUserId = exports.createUser = exports.getUsersName = exports.getUserId = exports.getUsers = void 0;
-const sequelize_1 = require("sequelize");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -36,27 +35,27 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getUsers = getUsers;
 const getUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const userIsNotDeleted = yield user_1.default.findOne({
-        where: {
-            [sequelize_1.Op.and]: [
-                { id },
-                { state: true }
-            ]
-        }
-    });
-    if (!userIsNotDeleted) {
-        res.status(400).json({
-            msg: `El usuario con el id ${id} ha sido eliminado`
-        });
-        return;
-    }
-    res.json(userIsNotDeleted);
+    const user = yield user_1.default.findByPk(id);
+    // const userIsNotDeleted = await User.findOne({
+    //     where: {
+    //         [Op.and]: [
+    //             { id },
+    //             { state: true }
+    //         ]
+    //     }
+    // });
+    // if( !userIsNotDeleted ) {
+    //     res.status(400).json({
+    //         msg: `El usuario con el id ${ id } ha sido eliminado`
+    //     });
+    //     return;
+    // }
+    res.json(user);
 });
 exports.getUserId = getUserId;
 const getUsersName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({
-        msg: 'get Users Names'
-    });
+    const { name } = req.query;
+    res.json(name);
 });
 exports.getUsersName = getUsersName;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -69,9 +68,29 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 });
 exports.createUser = createUser;
 const updateUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.json({
-        msg: 'update User Id'
+    const { id } = req.params;
+    const _b = req.body, { id: userId, state } = _b, userRest = __rest(_b, ["id", "state"]);
+    const emailExists = yield user_1.default.findOne({
+        where: {
+            email: userRest.email
+        }
     });
+    if (emailExists) {
+        res.status(400).json({
+            msg: `El email ${userRest.email} ya existe`
+        });
+        return;
+    }
+    if (userRest.password) {
+        const salt = bcryptjs_1.default.genSaltSync();
+        userRest.password = bcryptjs_1.default.hashSync(userRest.password, salt);
+    }
+    const user = yield user_1.default.update(userRest, {
+        where: {
+            id
+        }
+    });
+    res.json(user);
 });
 exports.updateUserId = updateUserId;
 const deleteUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
