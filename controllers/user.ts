@@ -28,8 +28,20 @@ export const getUsersName = async ( req: Request, res: Response ) => {
 
 export const createUser = async ( req: Request, res: Response ) => {
 
+    const { id, state, ...userRest } = req.body;
+
+    const emailExists = await User.findOne({
+        where: {
+            email: userRest.email
+        }
+    });
+
+
+    console.log( emailExists );
+
     res.json({
-        msg: 'user created'
+        msg: 'user created',
+        
     });
 
 }

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import Product from '../models/product';
 
+
 export const getProducts = async ( req: Request, res: Response ) => {
 
     const products = await Product.findAll({
