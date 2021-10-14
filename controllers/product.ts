@@ -81,7 +81,7 @@ export const getProductsName = async( req: Request, res: Response ) => {
 export const updateProductId = async( req: Request, res: Response ) => {
 
     const { id } = req.params;
-    const { id: asd, state, createdAt, updatedAt, ...rest } = req.body;
+    const { id: idProd, state, createdAt, updatedAt, ...rest } = req.body;
 
     // const product = await Product.findByPk( id );
     const product = await Product.findOne({
@@ -97,6 +97,7 @@ export const updateProductId = async( req: Request, res: Response ) => {
         res.status(404).json({
             msg: `Producto con el id ${ id } no existe`
         });
+        return;
     }
 
     const nameExists = await Product.findOne({
@@ -109,6 +110,7 @@ export const updateProductId = async( req: Request, res: Response ) => {
         res.status(400).json({
             msg: `Ya existe un producto con el nombre ${ rest.name }`
         });
+        return;
     }
 
     const barcodeExists = await Product.findOne({
@@ -121,9 +123,10 @@ export const updateProductId = async( req: Request, res: Response ) => {
         res.status(400).json({
             msg: `Ya existe un producto con el código ${ rest.barcode }`
         });
+        return;
     }
     
-    await product?.update( rest );
+    await product.update( rest );
 
     
     // TODO: Verificar que el proveedor exista
@@ -136,15 +139,15 @@ export const updateProductId = async( req: Request, res: Response ) => {
 
 export const createProduct = async ( req: Request, res: Response ) => {
 
-    const { body } = req;
+    const { name, price, description='', barcode, userId, providerId } = req.body;
 
     const product = {
-        name: body.name,
-        price: body.price,
-        description: body.description || '',
-        barcode: body.barcode,
-        userId: body.userId,
-        providerId: body.providerId
+        name,
+        price,
+        description,
+        barcode,
+        userId,
+        providerId
     }
 
     console.log( product );

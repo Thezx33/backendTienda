@@ -36,6 +36,9 @@ router.post('/',[
     validateFields
 ], createUser);
 
-router.delete('/:id', deleteUserId);
+router.delete('/:id',[
+    check('id').custom( userExists ),
+    validateFields
+], deleteUserId);
 
 export default router;

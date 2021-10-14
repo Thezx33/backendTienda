@@ -21,6 +21,9 @@ router.post('/', [
     (0, express_validator_1.check)('email').custom(db_validators_1.emailExists),
     validate_fields_1.validateFields
 ], user_1.createUser);
-router.delete('/:id', user_1.deleteUserId);
+router.delete('/:id', [
+    (0, express_validator_1.check)('id').custom(db_validators_1.userExists),
+    validate_fields_1.validateFields
+], user_1.deleteUserId);
 exports.default = router;
 //# sourceMappingURL=user.js.map

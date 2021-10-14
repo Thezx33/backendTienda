@@ -87,7 +87,7 @@ const getProductsName = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.getProductsName = getProductsName;
 const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const _a = req.body, { id: asd, state, createdAt, updatedAt } = _a, rest = __rest(_a, ["id", "state", "createdAt", "updatedAt"]);
+    const _a = req.body, { id: idProd, state, createdAt, updatedAt } = _a, rest = __rest(_a, ["id", "state", "createdAt", "updatedAt"]);
     // const product = await Product.findByPk( id );
     const product = yield product_1.default.findOne({
         where: {
@@ -101,6 +101,7 @@ const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(404).json({
             msg: `Producto con el id ${id} no existe`
         });
+        return;
     }
     const nameExists = yield product_1.default.findOne({
         where: {
@@ -111,6 +112,7 @@ const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(400).json({
             msg: `Ya existe un producto con el nombre ${rest.name}`
         });
+        return;
     }
     const barcodeExists = yield product_1.default.findOne({
         where: {
@@ -121,8 +123,9 @@ const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(400).json({
             msg: `Ya existe un producto con el código ${rest.barcode}`
         });
+        return;
     }
-    yield (product === null || product === void 0 ? void 0 : product.update(rest));
+    yield product.update(rest);
     // TODO: Verificar que el proveedor exista
     res.json({
         product
@@ -130,14 +133,14 @@ const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.updateProductId = updateProductId;
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { body } = req;
+    const { name, price, description = '', barcode, userId, providerId } = req.body;
     const product = {
-        name: body.name,
-        price: body.price,
-        description: body.description || '',
-        barcode: body.barcode,
-        userId: body.userId,
-        providerId: body.providerId
+        name,
+        price,
+        description,
+        barcode,
+        userId,
+        providerId
     };
     console.log(product);
     try {

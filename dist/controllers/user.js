@@ -103,17 +103,21 @@ const updateUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const salt = bcryptjs_1.default.genSaltSync();
         userRest.password = bcryptjs_1.default.hashSync(userRest.password, salt);
     }
-    const user = yield user_1.default.update(userRest, {
+    yield user_1.default.update(userRest, {
         where: {
             id
         }
     });
-    res.json(user);
+    res.json({
+        msg: `Usuario actualizado`
+    });
 });
 exports.updateUserId = updateUserId;
 const deleteUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    yield user_1.default.update({ state: false }, { where: { id } });
     res.json({
-        msg: 'delete User Id'
+        msg: `Usuario eliminado`
     });
 });
 exports.deleteUserId = deleteUserId;

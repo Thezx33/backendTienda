@@ -106,20 +106,26 @@ export const updateUserId = async ( req: Request, res: Response ) => {
 
     }
 
-    const user = await User.update( userRest, {
+    await User.update( userRest, {
         where: {
             id
         }
     });
 
-    res.json( user );
+    res.json({
+        msg: `Usuario actualizado`
+    });
 
 }
 
 export const deleteUserId = async ( req: Request, res: Response ) => {
 
+    const { id } = req.params;
+    
+    await User.update({state: false}, { where: { id  }});
+
     res.json({
-        msg: 'delete User Id'
+        msg: `Usuario eliminado`
     });
 
 }
