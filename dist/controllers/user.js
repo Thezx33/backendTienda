@@ -31,6 +31,12 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield user_1.default.findAll({
         where: { state: true }
     });
+    if (users.length === 0) {
+        res.status(404).json({
+            msg: `No hay usuarios registrados`
+        });
+        return;
+    }
     res.json(users);
 });
 exports.getUsers = getUsers;
@@ -55,7 +61,7 @@ const getUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getUserId = getUserId;
 const getUsersName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name } = req.query;
+    const { name: query } = req.query;
     const users = yield user_1.default.findAll({
         where: {
             // [Op.and]: [
@@ -63,7 +69,7 @@ const getUsersName = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             // ],
             state: true,
             name: {
-                [sequelize_1.Op.like]: `%${name}%`
+                [sequelize_1.Op.like]: `%${query}%`
             }
         }
     });
@@ -88,16 +94,18 @@ exports.createUser = createUser;
 const updateUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const _b = req.body, { id: userId, state } = _b, userRest = __rest(_b, ["id", "state"]);
-    const emailExists = yield user_1.default.findOne({
-        where: {
-            email: userRest.email
-        }
-    });
-    if (emailExists) {
-        res.status(400).json({
-            msg: `El email ${userRest.email} ya existe`
+    if (userRest.email) {
+        const emailExists = yield user_1.default.findOne({
+            where: {
+                email: userRest.email
+            }
         });
-        return;
+        if (emailExists) {
+            res.status(400).json({
+                msg: `El correo ${userRest.email} ya está registrado`
+            });
+            return;
+        }
     }
     if (userRest.password) {
         const salt = bcryptjs_1.default.genSaltSync();

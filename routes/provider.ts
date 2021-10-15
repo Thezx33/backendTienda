@@ -32,7 +32,7 @@ router.post('/',[
     check('email', 'El correo no es válido').isEmail(),
     check('email').custom( emailProviderExists ),
     check('phone', 'El teléfono es obligatorio').not().isEmpty(),
-    check('phone', 'El teléfono debe de contener al menos 10 caracteres').isLength({min: 10, max: 16}),
+    check('phone', 'El teléfono debe de contener mínimo 10 caracteres y máximo 16').isLength({min: 10, max: 16}),
     check('phone', 'No es un número de teléfono válido').isMobilePhone('es-MX'),
     check('phone').custom( phoneExists ),
     validateFields

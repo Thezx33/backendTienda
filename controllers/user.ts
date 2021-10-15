@@ -9,6 +9,13 @@ export const getUsers = async ( req: Request, res: Response ) => {
         where: { state: true }
     })
 
+    if( users.length === 0) {
+        res.status(404).json({
+            msg: `No hay usuarios registrados`
+        });
+        return;
+    }
+    
     res.json( users );
 
 }
@@ -42,7 +49,7 @@ export const getUserId = async ( req: Request, res: Response ) => {
 
 export const getUsersName = async ( req: Request, res: Response ) => {
 
-    const { name } = req.query;
+    const { name: query } = req.query;
 
     const users = await User.findAll({
         where: {
@@ -51,7 +58,7 @@ export const getUsersName = async ( req: Request, res: Response ) => {
             // ],
             state: true,
             name: {
-                [Op.like]: `%${ name }%`
+                [Op.like]: `%${ query }%`
             }
         }
     });
@@ -86,18 +93,24 @@ export const updateUserId = async ( req: Request, res: Response ) => {
     const { id } = req.params;
     const { id: userId, state, ...userRest } = req.body;
 
-    const emailExists = await User.findOne({
-        where: {
-            email: userRest.email
-        }
-    });
-
-    if( emailExists ) {
-        res.status(400).json({
-            msg: `El email ${ userRest.email } ya existe`
+    if ( userRest.email ) {
+        
+        const emailExists = await User.findOne({
+            where: {
+                email: userRest.email
+            }
         });
-        return;
+
+        if( emailExists ) {
+            res.status(400).json({
+                msg: `El correo ${ userRest.email } ya está registrado`
+            });
+            
+            return;
+        }
+
     }
+
 
     if( userRest.password ) {
 

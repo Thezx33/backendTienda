@@ -21,7 +21,7 @@ router.post('/', [
     (0, express_validator_1.check)('email', 'El correo no es válido').isEmail(),
     (0, express_validator_1.check)('email').custom(db_validators_1.emailProviderExists),
     (0, express_validator_1.check)('phone', 'El teléfono es obligatorio').not().isEmpty(),
-    (0, express_validator_1.check)('phone', 'El teléfono debe de contener al menos 10 caracteres').isLength({ min: 10, max: 16 }),
+    (0, express_validator_1.check)('phone', 'El teléfono debe de contener mínimo 10 caracteres y máximo 16').isLength({ min: 10, max: 16 }),
     (0, express_validator_1.check)('phone', 'No es un número de teléfono válido').isMobilePhone('es-MX'),
     (0, express_validator_1.check)('phone').custom(db_validators_1.phoneExists),
     validate_fields_1.validateFields

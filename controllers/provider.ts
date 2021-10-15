@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import Provider from '../models/provider';
 
+const pattern: RegExp = /(\(\d{3}\)[.-]?|\d{3}[.-]?)?\d{3}[.-]?\d{4}/;
+
 export const getProviders = async ( req: Request, res: Response ) => {
 
     const providers = await Provider.findAll({
@@ -12,6 +14,7 @@ export const getProviders = async ( req: Request, res: Response ) => {
         res.status(404).json({
             msg: `No hay proveedores registrados`
         });
+        return;
     }
 
     res.json( providers );
@@ -67,6 +70,75 @@ export const updateProviderId = async ( req: Request, res: Response ) => {
 
     const { id } = req.params;
     const { id: providerId, state, createdAt, updatedAt, ...providerRest } = req.body;
+
+    if( providerRest.email ) {
+        const emailExists = await Provider.findOne({
+            where: {
+                email: providerRest.email
+            }
+        });
+    
+        if( emailExists ) {
+            res.status(400).json({
+                msg: `El correo ${ providerRest.email } ya existe`
+            });
+            return;
+        }
+    }
+
+    if( providerRest.phone ) {
+        
+        if( providerRest.phone.length < 10 ) {
+            
+            res.status(400).json({
+                msg: 'El teléfono tiene que tener mínimo 10 caracteres'
+            });
+
+            return;
+        }
+
+        if (providerRest.phone.length > 16 ){
+
+            res.status(400).json({
+                msg: 'El teléfono tiene que tener máximo 16 caracteres'
+            });
+
+            return;
+
+        }
+
+        const phonePattern = new RegExp(pattern, 'g');
+
+        if( !phonePattern.test( providerRest.phone ) ) {
+
+            res.status(400).json({
+                msg: 'El formato del teléfono no es válido'
+            });
+            return;
+
+        }
+
+
+        const phoneExists = await Provider.findOne({
+            where: {
+                phone: providerRest.phone
+            }
+        });
+
+        if( phoneExists ) {
+            res.status(400).json({
+                msg: `El teléfono ${ providerRest.phone } ya existe`
+            });
+            return;
+        }
+    }
+
+
+    await Provider.update( providerRest, {
+        where: {
+            id
+        }
+    });
 
     res.json({
         msg: `Proveedor actualizado`
