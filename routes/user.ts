@@ -10,7 +10,7 @@ import {
 } from '../controllers/user';
 
 import { validateFields } from '../middlewares/validate-fields';
-import { emailExists, userExists } from '../helpers/db-validators';
+import { emailUserExists, userExists } from '../helpers/db-validators';
 
 
 const router = Router();
@@ -32,7 +32,7 @@ router.put('/:id',[
 
 router.post('/',[
     check('email', 'El correo no es válido').isEmail(),
-    check('email').custom( emailExists ),
+    check('email').custom( emailUserExists ),
     validateFields
 ], createUser);
 

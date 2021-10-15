@@ -4,6 +4,7 @@ import cors from 'cors';
 // Rutas
 import productRoutes from '../routes/product';
 import userRoutes from '../routes/user';
+import providerRoutes from '../routes/provider';
 
 // Conexión
 import db from '../db/connection';
@@ -14,7 +15,8 @@ class Server {
     private port: string;
     private apiPaths = {
         products: '/api/products',
-        users: '/api/users'
+        users: '/api/users',
+        providers: '/api/providers'
     }
 
     constructor() {
@@ -64,6 +66,7 @@ class Server {
 
         this.app.use( this.apiPaths.products, productRoutes );
         this.app.use( this.apiPaths.users, userRoutes );
+        this.app.use( this.apiPaths.providers, providerRoutes );
 
     }
 
