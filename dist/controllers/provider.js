@@ -42,7 +42,13 @@ const getProviders = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getProviders = getProviders;
 const getProviderId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const provider = yield provider_1.default.findByPk(id);
+    let provider = yield provider_1.default.findByPk(id);
+    if (!provider) {
+        res.status(400).json({
+            msg: 'No hay un usuario con ese id'
+        });
+        return;
+    }
     res.json(provider);
 });
 exports.getProviderId = getProviderId;

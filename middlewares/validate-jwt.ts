@@ -14,9 +14,9 @@ export const validateJWT = async ( req: Request, res: Response, next: NextFuncti
 
     try {
 
-        const uid = jwt.verify( token, process.env.SECRETORPRIVATEKEY!);
+        const { uid }: any = jwt.verify( token, process.env.SECRETORPRIVATEKEY! );
         // Leer el usuario que corresponde al id
-        const user = await User.findByPk( uid.toString() );
+        const user = await User.findByPk( uid );
     
         // Verificar que el usuario exista
         if( !user ) {
@@ -38,7 +38,7 @@ export const validateJWT = async ( req: Request, res: Response, next: NextFuncti
     
         next();
         
-    } catch (error: any) {
+    } catch ( error: any ) {
         console.log( error );
         res.status(401).json({
             msg: 'Token no válido'

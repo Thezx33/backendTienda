@@ -11,6 +11,7 @@ import {
 
 import { validateFields } from '../middlewares/validate-fields';
 import { emailUserExists, userExists } from '../helpers/db-validators';
+import { validateJWT } from '../middlewares/validate-jwt';
 
 
 const router = Router();
@@ -37,6 +38,7 @@ router.post('/',[
 ], createUser);
 
 router.delete('/:id',[
+    validateJWT,
     check('id').custom( userExists ),
     validateFields
 ], deleteUserId);

@@ -27,7 +27,7 @@ const Provider = connection_1.default.define('Provider', {
     }
 }, {
     charset: 'utf8',
-    collate: 'utf8_unicode_ci'
+    collate: 'utf8_unicode_ci',
 });
 exports.default = Provider;
 //# sourceMappingURL=provider.js.map

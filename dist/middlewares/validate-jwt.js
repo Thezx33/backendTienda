@@ -23,9 +23,9 @@ const validateJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         });
     }
     try {
-        const uid = jsonwebtoken_1.default.verify(token, process.env.SECRETORPRIVATEKEY);
+        const { uid } = jsonwebtoken_1.default.verify(token, process.env.SECRETORPRIVATEKEY);
         // Leer el usuario que corresponde al id
-        const user = yield user_1.default.findByPk(uid.toString());
+        const user = yield user_1.default.findByPk(uid);
         // Verificar que el usuario exista
         if (!user) {
             return res.status(401).json({

@@ -24,7 +24,7 @@ const Provider = db.define('Provider', {
     }
 },{
     charset: 'utf8',
-    collate: 'utf8_unicode_ci'
+    collate: 'utf8_unicode_ci',
 });
 
 export default Provider;

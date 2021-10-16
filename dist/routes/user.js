@@ -5,6 +5,7 @@ const express_validator_1 = require("express-validator");
 const user_1 = require("../controllers/user");
 const validate_fields_1 = require("../middlewares/validate-fields");
 const db_validators_1 = require("../helpers/db-validators");
+const validate_jwt_1 = require("../middlewares/validate-jwt");
 const router = (0, express_1.Router)();
 router.get('/', user_1.getUsers);
 router.get('/search', user_1.getUsersName);
@@ -22,6 +23,7 @@ router.post('/', [
     validate_fields_1.validateFields
 ], user_1.createUser);
 router.delete('/:id', [
+    validate_jwt_1.validateJWT,
     (0, express_validator_1.check)('id').custom(db_validators_1.userExists),
     validate_fields_1.validateFields
 ], user_1.deleteUserId);

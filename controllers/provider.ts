@@ -25,7 +25,14 @@ export const getProviderId = async ( req: Request, res: Response ) => {
     
     const { id } = req.params;
 
-    const provider = await Provider.findByPk( id );
+    let provider = await Provider.findByPk( id );
+
+    if( !provider ) {
+        res.status(400).json({
+            msg: 'No hay un usuario con ese id'
+        });
+        return;
+    }
 
     res.json( provider );
 

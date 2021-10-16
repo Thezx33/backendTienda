@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const dbName = process.env.DBNAME || '';
-const username = process.env.USERNAME || '';
-const password = process.env.PASSWORD || '';
-const host = process.env.HOST || '';
+const dbName = process.env.DBNAME;
+const username = process.env.USERNAME;
+const password = process.env.PASSWORD;
+const host = process.env.HOST;
 const db = new sequelize_1.Sequelize('Test', 'root', 'Descargar123.', {
     host,
     dialect: 'mysql'
