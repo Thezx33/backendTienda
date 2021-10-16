@@ -8,6 +8,36 @@ interface ICategory {
     state?: number;
 }
 
+export const getCategories = async ( req: Request, res: Response ) => {
+
+    try {
+        const categories = await Category.findAll({
+            where: {
+                state: true
+            }
+        });
+    
+        if( categories.length === 0 ) {
+    
+            res.status(404).json({
+                msg: 'No hay categorias'
+            });
+    
+            return;
+    
+        }
+    
+        res.json( categories );
+    } catch (error: any) {
+        console.log( error );
+        res.status(500).json({
+            msg: 'Hable con el administrador'
+        });
+        
+    }
+
+}
+
 export const createCategory = async ( req: Request, res: Response ) => {
 
     const { id, state, ...restCategory } = req.body;
@@ -59,7 +89,7 @@ export const updateCategory = async ( req: Request, res: Response ) => {
 
     if( !category ) {
         res.status(404).json({
-            msg: `Producto con el id ${ id } no existe`
+            msg: `La categoría con el id ${ id } no existe`
         });
         return;
     }
@@ -74,7 +104,7 @@ export const updateCategory = async ( req: Request, res: Response ) => {
 
     if( existsCategory ) {
         res.status(400).json({
-            msg: `El producto ${ restCategory.name }, ya existe`
+            msg: `La categoría ${ restCategory.name }, ya existe`
         });
         return;
     }

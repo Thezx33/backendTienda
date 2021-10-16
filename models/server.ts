@@ -6,6 +6,7 @@ import productRoutes from '../routes/product';
 import userRoutes from '../routes/user';
 import providerRoutes from '../routes/provider';
 import authRoutes from '../routes/auth';
+import categoryRoutes from '../routes/category';
 
 // Conexión
 import db from '../db/connection';
@@ -18,7 +19,8 @@ class Server {
         products: '/api/products',
         users: '/api/users',
         providers: '/api/providers',
-        auth: '/api/auth'
+        auth: '/api/auth',
+        category: '/api/category'
     }
 
     constructor() {
@@ -70,6 +72,7 @@ class Server {
         this.app.use( this.apiPaths.users, userRoutes );
         this.app.use( this.apiPaths.providers, providerRoutes );
         this.app.use( this.apiPaths.auth, authRoutes );
+        this.app.use( this.apiPaths.category, categoryRoutes );
 
     }
 

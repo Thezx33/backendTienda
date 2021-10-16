@@ -8,7 +8,7 @@ const connection_1 = __importDefault(require("../db/connection"));
 const Category = connection_1.default.define('Category', {
     id: {
         type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
+        autoIncrement: true,
         primaryKey: true
     },
     name: {
@@ -24,8 +24,7 @@ const Category = connection_1.default.define('Category', {
 }, {
     charset: 'utf8',
     collate: 'utf8_unicode_ci',
-    createdAt: false,
-    updatedAt: false
+    tableName: 'Category'
 });
 exports.default = Category;
 //# sourceMappingURL=category.js.map

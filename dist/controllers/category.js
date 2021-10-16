@@ -23,9 +23,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCategory = exports.updateCategory = exports.createCategory = void 0;
+exports.deleteCategory = exports.updateCategory = exports.createCategory = exports.getCategories = void 0;
 const sequelize_1 = require("sequelize");
 const category_1 = __importDefault(require("../models/category"));
+const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const categories = yield category_1.default.findAll({
+            where: {
+                state: true
+            }
+        });
+        if (categories.length === 0) {
+            res.status(404).json({
+                msg: 'No hay categorias'
+            });
+            return;
+        }
+        res.json(categories);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Hable con el administrador'
+        });
+    }
+});
+exports.getCategories = getCategories;
 const createCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const _a = req.body, { id, state } = _a, restCategory = __rest(_a, ["id", "state"]);
     try {
@@ -64,7 +87,7 @@ const updateCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
     });
     if (!category) {
         res.status(404).json({
-            msg: `Producto con el id ${id} no existe`
+            msg: `La categoría con el id ${id} no existe`
         });
         return;
     }
@@ -76,7 +99,7 @@ const updateCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
     });
     if (existsCategory) {
         res.status(400).json({
-            msg: `El producto ${restCategory.name}, ya existe`
+            msg: `La categoría ${restCategory.name}, ya existe`
         });
         return;
     }

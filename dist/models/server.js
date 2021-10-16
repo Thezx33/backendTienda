@@ -19,6 +19,7 @@ const product_1 = __importDefault(require("../routes/product"));
 const user_1 = __importDefault(require("../routes/user"));
 const provider_1 = __importDefault(require("../routes/provider"));
 const auth_1 = __importDefault(require("../routes/auth"));
+const category_1 = __importDefault(require("../routes/category"));
 // Conexión
 const connection_1 = __importDefault(require("../db/connection"));
 class Server {
@@ -27,7 +28,8 @@ class Server {
             products: '/api/products',
             users: '/api/users',
             providers: '/api/providers',
-            auth: '/api/auth'
+            auth: '/api/auth',
+            category: '/api/category'
         };
         this.app = (0, express_1.default)();
         this.port = process.env.PORT || '8000';
@@ -62,6 +64,7 @@ class Server {
         this.app.use(this.apiPaths.users, user_1.default);
         this.app.use(this.apiPaths.providers, provider_1.default);
         this.app.use(this.apiPaths.auth, auth_1.default);
+        this.app.use(this.apiPaths.category, category_1.default);
     }
     listen() {
         this.app.listen(this.port, () => {

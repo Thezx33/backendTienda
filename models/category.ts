@@ -5,7 +5,7 @@ const Category = db.define('Category', {
 
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
+        autoIncrement: true,
         primaryKey: true
     },
     name: {
@@ -21,8 +21,7 @@ const Category = db.define('Category', {
 },{
     charset: 'utf8',
     collate: 'utf8_unicode_ci',
-    createdAt: false,
-    updatedAt: false
+    tableName: 'Category'
 });
 
 export default Category
