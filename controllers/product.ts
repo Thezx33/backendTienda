@@ -217,10 +217,12 @@ export const deleteProductId = async( req: Request, res: Response ) => {
         res.status(404).json({
             msg: `Producto con el id ${ id } no existe`
         });
+
+        return;
     }
 
     // Eliminación lógica
-    await product?.update({ state: false });
+    await product.update({ state: false });
 
     res.json(product);
 

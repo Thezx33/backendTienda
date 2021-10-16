@@ -194,9 +194,10 @@ const deleteProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
         res.status(404).json({
             msg: `Producto con el id ${id} no existe`
         });
+        return;
     }
     // Eliminación lógica
-    yield (product === null || product === void 0 ? void 0 : product.update({ state: false }));
+    yield product.update({ state: false });
     res.json(product);
 });
 exports.deleteProductId = deleteProductId;
