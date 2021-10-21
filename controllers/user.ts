@@ -78,13 +78,25 @@ export const createUser = async ( req: Request, res: Response ) => {
 
     const { id, state, ...userRest } = req.body;
 
-    // Encriptar contraseña
-    const salt = bcryptjs.genSaltSync();
-    userRest.password = bcryptjs.hashSync( userRest.password, salt );
+    console.log( userRest );
 
-    const user = await User.create( userRest );
+    try {
+            // Encriptar contraseña
+        const salt = bcryptjs.genSaltSync();
+        userRest.password = bcryptjs.hashSync( userRest.password, salt );
 
-    res.json( user );
+        const user = await User.create( userRest );
+
+        res.json( user );
+    } catch (error: any) {
+        
+        console.log( error );
+        res.status(500).json({
+            msg: 'Hable con el adminsitrador'
+        });
+
+    }
+
 
 }
 

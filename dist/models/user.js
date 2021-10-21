@@ -15,7 +15,7 @@ const User = connection_1.default.define('User', {
         allowNull: false,
         unique: true
     },
-    pass: {
+    password: {
         type: sequelize_1.DataTypes.STRING(60),
         allowNull: false
     },

@@ -84,11 +84,20 @@ const getUsersName = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getUsersName = getUsersName;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const _a = req.body, { id, state } = _a, userRest = __rest(_a, ["id", "state"]);
-    // Encriptar contraseña
-    const salt = bcryptjs_1.default.genSaltSync();
-    userRest.password = bcryptjs_1.default.hashSync(userRest.password, salt);
-    const user = yield user_1.default.create(userRest);
-    res.json(user);
+    console.log(userRest);
+    try {
+        // Encriptar contraseña
+        const salt = bcryptjs_1.default.genSaltSync();
+        userRest.password = bcryptjs_1.default.hashSync(userRest.password, salt);
+        const user = yield user_1.default.create(userRest);
+        res.json(user);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Hable con el adminsitrador'
+        });
+    }
 });
 exports.createUser = createUser;
 const updateUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
