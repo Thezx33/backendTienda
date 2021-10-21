@@ -6,9 +6,9 @@ const password: string = process.env.PASSWORD as string;
 const host: string = process.env.HOST as string;
 
 
-const db = new Sequelize('Test', 'root', 'Descargar123.', {
-    host,
-    dialect: 'mysql'
+const db = new Sequelize('test', 'thezx', 'Descargar123.', {
+    host: 'localhost',
+    dialect: 'mariadb'
 });
 
 export default db;

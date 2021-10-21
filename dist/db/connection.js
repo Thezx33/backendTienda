@@ -5,9 +5,9 @@ const dbName = process.env.DBNAME;
 const username = process.env.USERNAME;
 const password = process.env.PASSWORD;
 const host = process.env.HOST;
-const db = new sequelize_1.Sequelize('Test', 'root', 'Descargar123.', {
-    host,
-    dialect: 'mysql'
+const db = new sequelize_1.Sequelize('test', 'thezx', 'Descargar123.', {
+    host: 'localhost',
+    dialect: 'mariadb'
 });
 exports.default = db;
 //# sourceMappingURL=connection.js.map
