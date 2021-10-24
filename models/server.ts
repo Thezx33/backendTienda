@@ -1,3 +1,4 @@
+import { asocioaciones } from './associations';
 import express, { Application } from 'express';
 import cors from 'cors';
 
@@ -54,6 +55,9 @@ class Server {
     }
 
     middlewares(): void {
+
+        asocioaciones();
+        db.sync();
 
         // CORS
         this.app.use( cors() );

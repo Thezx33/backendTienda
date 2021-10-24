@@ -1,8 +1,9 @@
 import { DataTypes } from 'sequelize';
 import db from '../db/connection';
+import Product from './product';
+import ProductsCategory from './product-category';
 
 const Category = db.define('Category', {
-
     id: {
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
@@ -21,7 +22,11 @@ const Category = db.define('Category', {
 },{
     charset: 'utf8',
     collate: 'utf8_unicode_ci',
-    tableName: 'Category'
+    tableName: 'categories'
 });
 
-export default Category
+// Category.belongsToMany( Product, { through: ProductsCategory } );
+
+
+
+export default Category;

@@ -35,10 +35,15 @@ const Product = connection_1.default.define('Product', {
     providerId: {
         type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
         allowNull: false
+    },
+    categoryId: {
+        type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
+        allowNull: false
     }
 }, {
     charset: 'utf8',
-    collate: 'utf8_unicode_ci'
+    collate: 'utf8_unicode_ci',
+    tableName: 'products'
 });
 exports.default = Product;
 //# sourceMappingURL=product.js.map

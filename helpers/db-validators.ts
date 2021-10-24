@@ -1,6 +1,7 @@
 import User from '../models/user';
 import { Op } from 'sequelize';
 import Provider from '../models/provider';
+import Product from '../models/product';
 
 
 export const emailUserExists = async( email: string ): Promise<void> => {
@@ -75,6 +76,20 @@ export const phoneExists = async ( phoneNumber: string ): Promise<void> => {
 
     if( phoneExists ) {
         throw new Error( `El número ${ phoneNumber } ya existe` );   
+    }
+
+}
+
+export const productExists = async ( name: string ): Promise<void> => {
+
+    const productExists = await Product.findOne({
+        where: {
+            name
+        }
+    });
+
+    if( productExists ) {
+        throw new Error( `El producto ${ name } ya existe`);
     }
 
 }

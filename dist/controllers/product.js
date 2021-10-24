@@ -25,12 +25,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteProductId = exports.createProduct = exports.updateProductId = exports.getProductsName = exports.getProductId = exports.getProducts = void 0;
 const sequelize_1 = require("sequelize");
+const category_1 = __importDefault(require("../models/category"));
 const product_1 = __importDefault(require("../models/product"));
+const provider_1 = __importDefault(require("../models/provider"));
+const user_1 = __importDefault(require("../models/user"));
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const products = yield product_1.default.findAll({
         where: {
             state: true
-        }
+        },
+        include: [
+            {
+                model: user_1.default,
+                attributes: ['name', 'email']
+            },
+            {
+                model: provider_1.default,
+                attributes: ['name', 'email', 'phone']
+            },
+            {
+                model: category_1.default,
+                attributes: ['name']
+            }
+        ],
+        // attributes: ['id','name','email']
+        attributes: ['id', 'name', 'price', 'barcode']
     });
     if (products.length === 0) {
         res.json({
@@ -57,7 +76,7 @@ const getProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
         return;
     }
-    console.log(product);
+    // console.log( product );
     res.json(product);
 });
 exports.getProductId = getProductId;
@@ -87,7 +106,7 @@ const getProductsName = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.getProductsName = getProductsName;
 const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const _a = req.body, { id: idProd, state, createdAt, updatedAt } = _a, rest = __rest(_a, ["id", "state", "createdAt", "updatedAt"]);
+    const _a = req.body, { id: idProd, state, createdAt, updatedAt } = _a, productRest = __rest(_a, ["id", "state", "createdAt", "updatedAt"]);
     // const product = await Product.findByPk( id );
     const product = yield product_1.default.findOne({
         where: {
@@ -105,27 +124,27 @@ const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
     const nameExists = yield product_1.default.findOne({
         where: {
-            name: rest.name
+            name: productRest.name
         }
     });
     if (nameExists) {
         res.status(400).json({
-            msg: `Ya existe un producto con el nombre ${rest.name}`
+            msg: `Ya existe un producto con el nombre ${productRest.name}`
         });
         return;
     }
     const barcodeExists = yield product_1.default.findOne({
         where: {
-            barcode: rest.barcode
+            barcode: productRest.barcode
         }
     });
     if (barcodeExists) {
         res.status(400).json({
-            msg: `Ya existe un producto con el código ${rest.barcode}`
+            msg: `Ya existe un producto con el código ${productRest.barcode}`
         });
         return;
     }
-    yield product.update(rest);
+    yield product.update(productRest);
     // TODO: Verificar que el proveedor exista
     res.json({
         product
@@ -133,42 +152,39 @@ const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.updateProductId = updateProductId;
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, price, description = '', barcode, userId, providerId } = req.body;
-    const product = {
-        name,
-        price,
-        description,
-        barcode,
-        userId,
-        providerId
-    };
-    console.log(product);
+    const { id, state } = req.body;
+    const productRest = __rest(req.body, []);
+    // console.log( req );
+    // console.log( productRest );
     try {
         const nameExists = yield product_1.default.findOne({
             where: {
-                name: product.name
+                name: productRest.name
             }
         });
         if (nameExists) {
             res.status(400).json({
-                msg: `Ya existe un producto con el nombre ${product.name}`
+                msg: `Ya existe un producto con el nombre ${productRest.name}`
             });
             return;
         }
         const barcodeExists = yield product_1.default.findOne({
             where: {
-                barCode: product.barcode
+                barCode: productRest.barcode
             }
         });
         if (barcodeExists) {
             res.status(400).json({
-                msg: `Ya existe un producto con el código de barras ${product.barcode}`
+                msg: `Ya existe un producto con el código de barras ${productRest.barcode}`
             });
             return;
         }
+        delete productRest.state;
+        productRest.userId = req.user;
         // TODO: Validaciones para comprobar que el id del proveedor existe.
         // TODO: Validaciones para comprobar que el id del usuario existe.
-        const newProduct = yield product_1.default.create(product);
+        const newProduct = yield product_1.default.create(productRest);
+        // console.log( newProduct );
         res.json(newProduct);
     }
     catch (error) {

@@ -38,7 +38,8 @@ const validateJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
                 msg: 'Token no válido - Usuario con estado: false'
             });
         }
-        req.user = user;
+        const userId = uid;
+        req.user = userId;
         next();
     }
     catch (error) {

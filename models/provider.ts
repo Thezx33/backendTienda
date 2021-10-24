@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import db from '../db/connection';
+import Product from './product';
 
 const Provider = db.define('Provider', {
 
@@ -25,6 +26,9 @@ const Provider = db.define('Provider', {
 },{
     charset: 'utf8',
     collate: 'utf8_unicode_ci',
+    tableName: 'providers'
 });
+
+
 
 export default Provider;

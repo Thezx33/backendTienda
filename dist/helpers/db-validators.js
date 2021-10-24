@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.phoneExists = exports.providerExists = exports.emailProviderExists = exports.userExists = exports.emailUserExists = void 0;
+exports.productExists = exports.phoneExists = exports.providerExists = exports.emailProviderExists = exports.userExists = exports.emailUserExists = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const sequelize_1 = require("sequelize");
 const provider_1 = __importDefault(require("../models/provider"));
+const product_1 = __importDefault(require("../models/product"));
 const emailUserExists = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const emailExists = yield user_1.default.findOne({
         where: {
@@ -77,4 +78,15 @@ const phoneExists = (phoneNumber) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.phoneExists = phoneExists;
+const productExists = (name) => __awaiter(void 0, void 0, void 0, function* () {
+    const productExists = yield product_1.default.findOne({
+        where: {
+            name
+        }
+    });
+    if (productExists) {
+        throw new Error(`El producto ${name} ya existe`);
+    }
+});
+exports.productExists = productExists;
 //# sourceMappingURL=db-validators.js.map

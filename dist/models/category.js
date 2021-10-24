@@ -24,7 +24,8 @@ const Category = connection_1.default.define('Category', {
 }, {
     charset: 'utf8',
     collate: 'utf8_unicode_ci',
-    tableName: 'Category'
+    tableName: 'categories'
 });
+// Category.belongsToMany( Product, { through: ProductsCategory } );
 exports.default = Category;
 //# sourceMappingURL=category.js.map

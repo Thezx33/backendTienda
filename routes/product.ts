@@ -1,4 +1,8 @@
 import { Router } from 'express';
+import { check } from 'express-validator';
+import { productExists } from './../helpers/db-validators';
+import { validateJWT } from './../middlewares/validate-jwt';
+import { validateFields } from './../middlewares/validate-fields';
 import {
     getProducts,
     getProductId,
@@ -20,8 +24,16 @@ router.get('/:id', getProductId);
 
 router.put('/:id', updateProductId);
 
-router.post('/', createProduct);
+router.post('/',[
+    validateJWT,
+    check('name').custom( productExists ),
+    validateFields
+],createProduct);
 
-router.delete('/:id', deleteProductId);
+router.delete('/:id',[
+    validateJWT,
+    check('name').custom( productExists ),
+    validateFields
+],deleteProductId);
 
 export default router;

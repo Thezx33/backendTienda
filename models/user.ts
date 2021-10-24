@@ -1,8 +1,13 @@
 import { DataTypes } from 'sequelize';
 import db from '../db/connection';
+import Product from './product';
 
 const User = db.define('User', {
-
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
     name: {
         type: DataTypes.STRING(100),
         allowNull: false
@@ -21,10 +26,12 @@ const User = db.define('User', {
         allowNull: false,
         defaultValue: true
     }
-
 },{
     charset: 'utf8',
-    collate: 'utf8_unicode_ci'
+    collate: 'utf8_unicode_ci',
+    tableName: 'users'
 });
+
+
 
 export default User;

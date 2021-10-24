@@ -27,14 +27,15 @@ export const validateJWT = async ( req: Request, res: Response, next: NextFuncti
     
         // Verificar si el uid tiene estado true
     
-    
         if( !user.getDataValue('state') ) {
             return res.status(401).json({
                 msg: 'Token no válido - Usuario con estado: false'
             });
         }
+
+        const userId: number = uid;
     
-        req.user = user;
+        req.user = userId;
     
         next();
         
