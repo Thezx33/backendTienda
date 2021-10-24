@@ -14,8 +14,6 @@ const asocioaciones = () => {
     product_1.default.belongsTo(provider_1.default, { foreignKey: 'id' });
     // Provider.hasMany( Product );
     product_1.default.belongsTo(category_1.default, { foreignKey: 'id' });
-    // Product.belongsToMany( Category, { through: 'pc' );
-    // Category.belongsToMany( Product, { through: 'pc' );
 };
 exports.asocioaciones = asocioaciones;
 //# sourceMappingURL=associations.js.map
