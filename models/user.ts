@@ -32,6 +32,4 @@ const User = db.define('User', {
     tableName: 'users'
 });
 
-
-
 export default User;

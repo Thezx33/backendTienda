@@ -14,7 +14,4 @@ export const asocioaciones = () => {
 
     Product.belongsTo( Category, { foreignKey: 'id' } );
 
-    // Product.belongsToMany( Category, { through: 'pc' );
-    // Category.belongsToMany( Product, { through: 'pc' );
-
 }

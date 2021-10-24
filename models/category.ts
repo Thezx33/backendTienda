@@ -1,7 +1,5 @@
 import { DataTypes } from 'sequelize';
 import db from '../db/connection';
-import Product from './product';
-import ProductsCategory from './product-category';
 
 const Category = db.define('Category', {
     id: {

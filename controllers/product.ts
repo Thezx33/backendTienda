@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import Category from '../models/category';
 import Product from '../models/product';
-import ProductsCategory from '../models/product-category';
 import Provider from '../models/provider';
 import User from '../models/user';
 
