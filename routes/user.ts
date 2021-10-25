@@ -3,7 +3,6 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 import {
     getUsers,
-    getUsersName,
     getUserId,
     updateUserId,
     createUser,
