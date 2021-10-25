@@ -23,74 +23,97 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUserId = exports.updateUserId = exports.createUser = exports.getUsersName = exports.getUserId = exports.getUsers = void 0;
+exports.deleteUserId = exports.updateUserId = exports.createUser = exports.getUserId = exports.getUsers = void 0;
 const sequelize_1 = require("sequelize");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield user_1.default.findAll({
-        where: { state: true }
-    });
-    if (users.length === 0) {
-        res.status(404).json({
-            msg: `No hay usuarios registrados`
+    try {
+        // Encontrar a todos los usuarios que esten activos
+        const users = yield user_1.default.findAll({
+            where: { state: true },
+            attributes: [
+                'id',
+                'name',
+                'email',
+                'createdAt',
+                'updatedAt'
+            ]
         });
-        return;
+        if (users.length === 0) {
+            res.status(404).json({
+                msg: `No hay usuarios registrados`
+            });
+            return;
+        }
+        res.status(200).json({ users });
     }
-    res.json(users);
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Hable con el administrador'
+        });
+    }
 });
 exports.getUsers = getUsers;
 const getUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const user = yield user_1.default.findByPk(id);
-    // const userIsNotDeleted = await User.findOne({
-    //     where: {
-    //         [Op.and]: [
-    //             { id },
-    //             { state: true }
-    //         ]
-    //     }
-    // });
-    // if( !userIsNotDeleted ) {
-    //     res.status(400).json({
-    //         msg: `El usuario con el id ${ id } ha sido eliminado`
-    //     });
-    //     return;
-    // }
-    res.json(user);
+    try {
+        // Obtener al usuario con el id y con el estado en true.
+        const user = yield user_1.default.findOne({
+            where: {
+                [sequelize_1.Op.and]: [
+                    { id },
+                    { state: true }
+                ]
+            },
+            attributes: [
+                'id',
+                'name',
+                'email',
+                'createdAt',
+                'updatedAt'
+            ]
+        });
+        res.status(200).json({ user });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Hable con el administrador'
+        });
+    }
 });
 exports.getUserId = getUserId;
-const getUsersName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name: query } = req.query;
-    const users = yield user_1.default.findAll({
-        where: {
-            // [Op.and]: [
-            //     { state: true }
-            // ],
-            state: true,
-            name: {
-                [sequelize_1.Op.like]: `%${query}%`
-            }
-        }
-    });
-    if (users.length === 0) {
-        res.status(404).json({
-            msg: `No hay usuarios que coincidan con su búsqueda`
-        });
-        return;
-    }
-    res.json(users);
-});
-exports.getUsersName = getUsersName;
+// export const getUsersName = async ( req: Request, res: Response ) => {
+//     const { name: query } = req.query;
+//     const users = await User.findAll({
+//         where: {
+//             // [Op.and]: [
+//             //     { state: true }
+//             // ],
+//             state: true,
+//             name: {
+//                 [Op.like]: `%${ query }%`
+//             }
+//         }
+//     });
+//     if( users.length === 0 ){
+//         res.status(404).json({
+//             msg: `No hay usuarios que coincidan con su búsqueda`
+//         });
+//         return;
+//     }
+//     res.json( users );
+// }
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const _a = req.body, { id, state } = _a, userRest = __rest(_a, ["id", "state"]);
-    console.log(userRest);
     try {
         // Encriptar contraseña
         const salt = bcryptjs_1.default.genSaltSync();
         userRest.password = bcryptjs_1.default.hashSync(userRest.password, salt);
         const user = yield user_1.default.create(userRest);
-        res.json(user);
+        res.status(201).json({ user });
     }
     catch (error) {
         console.log(error);
@@ -103,36 +126,58 @@ exports.createUser = createUser;
 const updateUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const _b = req.body, { id: userId, state } = _b, userRest = __rest(_b, ["id", "state"]);
-    if (userRest.email) {
-        const emailExists = yield user_1.default.findOne({
-            where: {
-                email: userRest.email
-            }
-        });
-        if (emailExists) {
-            res.status(400).json({
-                msg: `El correo ${userRest.email} ya está registrado`
+    try {
+        // Verifica si viene el correo
+        if (userRest.email) {
+            // Buscar si el correo ya esta registrado
+            const emailExists = yield user_1.default.findOne({
+                where: {
+                    email: userRest.email
+                }
             });
-            return;
+            // Si el correo ya está registrado manda un error
+            if (emailExists) {
+                res.status(400).json({
+                    msg: `El correo ${userRest.email} ya está registrado`
+                });
+                return;
+            }
         }
-    }
-    if (userRest.password) {
-        const salt = bcryptjs_1.default.genSaltSync();
-        userRest.password = bcryptjs_1.default.hashSync(userRest.password, salt);
-    }
-    yield user_1.default.update(userRest, {
-        where: {
-            id
+        // Verifica si viene la contraseña
+        if (userRest.password) {
+            // Encriptar la contraseña
+            const salt = bcryptjs_1.default.genSaltSync();
+            userRest.password = bcryptjs_1.default.hashSync(userRest.password, salt);
         }
-    });
-    res.json({
-        msg: `Usuario actualizado`
-    });
+        // Actualizar la información del usuario
+        yield user_1.default.update(userRest, {
+            where: { id }
+        });
+        res.json({
+            msg: `Usuario actualizado`
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Hable con el administrador'
+        });
+    }
 });
 exports.updateUserId = updateUserId;
 const deleteUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    yield user_1.default.update({ state: false }, { where: { id } });
+    try {
+        yield user_1.default.update({ state: false }, {
+            where: { id }
+        });
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Hable con el administrador'
+        });
+    }
     res.json({
         msg: `Usuario eliminado`
     });
