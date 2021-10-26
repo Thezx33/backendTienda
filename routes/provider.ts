@@ -1,9 +1,9 @@
+import { validateJWT } from './../middlewares/validate-jwt';
 import { Router } from 'express';
 import { check } from 'express-validator';
 import { validateFields } from '../middlewares/validate-fields';
 import {
     getProviders,
-    getProvidersName,
     getProviderId,
     updateProviderId,
     createProvider,
@@ -15,19 +15,21 @@ const router = Router();
 
 router.get('/', getProviders);
 
-router.get('/search', getProvidersName);
+// router.get('/search', getProvidersName);
 
-router.get('/:id',[
+router.get('/:id', [
     check('id').custom( providerExists ),
     validateFields
 ], getProviderId);
 
 router.put('/:id', [
+    validateJWT,
     check('id').custom( providerExists ),
     validateFields
 ], updateProviderId);
 
-router.post('/',[
+router.post('/', [
+    validateJWT,
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('email', 'El correo no es válido').isEmail(),
     check('email').custom( emailProviderExists ),

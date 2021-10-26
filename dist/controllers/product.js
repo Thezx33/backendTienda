@@ -223,8 +223,7 @@ const updateProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.updateProductId = updateProductId;
 const createProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id, state } = req.body;
-    const productRest = __rest(req.body, []);
+    const _b = req.body, { id, state } = _b, productRest = __rest(_b, ["id", "state"]);
     // console.log( req );
     // console.log( productRest );
     delete productRest.state;

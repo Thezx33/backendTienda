@@ -270,8 +270,7 @@ export const updateProductId = async( req: Request, res: Response ) => {
 
 export const createProduct = async ( req: Request, res: Response ) => {
 
-    const { id, state } = req.body;
-    const { ...productRest }: IProduct = req.body;
+    const { id, state, ...productRest } = req.body;
 
     // console.log( req );
     // console.log( productRest );
