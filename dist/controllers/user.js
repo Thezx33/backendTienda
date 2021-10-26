@@ -127,6 +127,21 @@ const updateUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     const { id } = req.params;
     const _b = req.body, { id: userId, state } = _b, userRest = __rest(_b, ["id", "state"]);
     try {
+        // Verificar si el usuario existe | state = true
+        const userExists = yield user_1.default.findOne({
+            where: {
+                [sequelize_1.Op.and]: [
+                    { id },
+                    { state: true }
+                ]
+            }
+        });
+        if (!userExists) {
+            res.status(400).json({
+                msg: `El usuario con el id ${id} está eliminado`
+            });
+            return;
+        }
         // Verifica si viene el correo
         if (userRest.email) {
             // Buscar si el correo ya esta registrado

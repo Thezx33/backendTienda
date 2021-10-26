@@ -145,6 +145,26 @@ export const updateUserId = async ( req: Request, res: Response ) => {
 
     try {
 
+        // Verificar si el usuario existe | state = true
+        const userExists = await User.findOne({
+            where: {
+                [Op.and]: [
+                    { id },
+                    { state: true }
+                ]
+            }
+        });
+    
+        if( !userExists ) {
+
+            res.status(400).json({
+                msg: `El usuario con el id ${ id } está eliminado`
+            });
+
+            return;
+
+        }
+
         // Verifica si viene el correo
         if ( userRest.email ) {
         

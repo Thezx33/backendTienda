@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.productExists = exports.phoneExists = exports.providerExists = exports.emailProviderExists = exports.userExists = exports.emailUserExists = void 0;
 const user_1 = __importDefault(require("../models/user"));
-const sequelize_1 = require("sequelize");
 const provider_1 = __importDefault(require("../models/provider"));
 const product_1 = __importDefault(require("../models/product"));
 const emailUserExists = (email) => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,14 +28,7 @@ const emailUserExists = (email) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.emailUserExists = emailUserExists;
 const userExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const userExists = yield user_1.default.findOne({
-        where: {
-            [sequelize_1.Op.and]: [
-                { id },
-                { state: true }
-            ]
-        }
-    });
+    const userExists = yield user_1.default.findByPk(id);
     if (!userExists) {
         throw new Error(`El usuario con el id ${id} no existe`);
     }
@@ -54,14 +46,7 @@ const emailProviderExists = (email) => __awaiter(void 0, void 0, void 0, functio
 });
 exports.emailProviderExists = emailProviderExists;
 const providerExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const providerExists = yield provider_1.default.findOne({
-        where: {
-            [sequelize_1.Op.and]: [
-                { id },
-                { state: true }
-            ]
-        }
-    });
+    const providerExists = yield provider_1.default.findByPk(id);
     if (!providerExists) {
         throw new Error(`El proveedor con el id ${id} no existe`);
     }
@@ -78,14 +63,10 @@ const phoneExists = (phoneNumber) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.phoneExists = phoneExists;
-const productExists = (name) => __awaiter(void 0, void 0, void 0, function* () {
-    const productExists = yield product_1.default.findOne({
-        where: {
-            name
-        }
-    });
-    if (productExists) {
-        throw new Error(`El producto ${name} ya existe`);
+const productExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const productExists = yield product_1.default.findByPk(id);
+    if (!productExists) {
+        throw new Error(`El producto con el id ${id} no existe`);
     }
 });
 exports.productExists = productExists;

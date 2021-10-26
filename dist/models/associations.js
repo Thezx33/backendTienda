@@ -9,11 +9,15 @@ const product_1 = __importDefault(require("./product"));
 const provider_1 = __importDefault(require("./provider"));
 const user_1 = __importDefault(require("./user"));
 const asocioaciones = () => {
-    product_1.default.belongsTo(user_1.default, { foreignKey: 'id' });
+    // Product.belongsTo( User, { foreignKey: 'id' } );
+    product_1.default.belongsTo(user_1.default);
     // User.hasMany( Product );
-    product_1.default.belongsTo(provider_1.default, { foreignKey: 'id' });
-    // Provider.hasMany( Product );
-    product_1.default.belongsTo(category_1.default, { foreignKey: 'id' });
+    // Product.belongsTo( Provider, { foreignKey: 'id' } );
+    product_1.default.belongsTo(provider_1.default);
+    //Provider.hasMany( Product );
+    // Product.belongsTo( Category, { foreignKey: 'id' } );
+    product_1.default.belongsTo(category_1.default);
+    // Category.hasMany( Product )
 };
 exports.asocioaciones = asocioaciones;
 //# sourceMappingURL=associations.js.map
