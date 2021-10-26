@@ -2,6 +2,7 @@ import User from '../models/user';
 import { Op } from 'sequelize';
 import Provider from '../models/provider';
 import Product from '../models/product';
+import Category from '../models/category';
 
 
 export const emailUserExists = async( email: string ): Promise<void> => {
@@ -72,6 +73,17 @@ export const productExists = async ( id: number ): Promise<void> => {
 
     if( !productExists ) {
         throw new Error( `El producto con el id ${ id } no existe` );
+    }
+
+}
+
+export const categoryExists = async ( id: number ): Promise<void> => {
+
+    const categoryExits = await Category.findByPk( id );
+
+    if( !categoryExists ) {
+        throw new Error( `La categoría con el id ${ id } no existe` );
+        
     }
 
 }

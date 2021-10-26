@@ -31,7 +31,8 @@ const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const categories = yield category_1.default.findAll({
             where: {
                 state: true
-            }
+            },
+            attributes: ['id', 'name', 'createdAt']
         });
         if (categories.length === 0) {
             res.status(404).json({
@@ -39,7 +40,7 @@ const getCategories = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             });
             return;
         }
-        res.json(categories);
+        res.status(200).json({ categories });
     }
     catch (error) {
         console.log(error);
@@ -52,6 +53,7 @@ exports.getCategories = getCategories;
 const createCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const _a = req.body, { id, state } = _a, restCategory = __rest(_a, ["id", "state"]);
     try {
+        restCategory.name = restCategory.name.toUpperCase();
         const nameExists = yield category_1.default.findOne({
             where: {
                 name: restCategory.name
@@ -64,7 +66,7 @@ const createCategory = (req, res) => __awaiter(void 0, void 0, void 0, function*
             return;
         }
         const category = yield category_1.default.create(restCategory);
-        res.json(category);
+        res.status(201).json(category);
     }
     catch (error) {
         console.log(error);
@@ -77,36 +79,40 @@ exports.createCategory = createCategory;
 const updateCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     const _b = req.body, { id: bodyId, state } = _b, restCategory = __rest(_b, ["id", "state"]);
-    const category = yield category_1.default.findOne({
-        where: {
-            [sequelize_1.Op.and]: [
-                { id },
-                { state: true }
-            ]
-        }
-    });
-    if (!category) {
-        res.status(404).json({
-            msg: `La categoría con el id ${id} no existe`
+    try {
+        const category = yield category_1.default.findOne({
+            where: {
+                [sequelize_1.Op.and]: [
+                    { id },
+                    { state: true }
+                ]
+            }
         });
-        return;
-    }
-    restCategory.name = restCategory.name.toUpperCase();
-    const existsCategory = yield category_1.default.findOne({
-        where: {
-            name: restCategory.name
+        if (!category) {
+            res.status(404).json({
+                msg: `La categoría con el id ${id} no existe`
+            });
+            return;
         }
-    });
-    if (existsCategory) {
-        res.status(400).json({
-            msg: `La categoría ${restCategory.name}, ya existe`
+        const existsCategory = yield category_1.default.findOne({
+            where: {
+                name: restCategory.name
+            }
         });
-        return;
+        if (existsCategory) {
+            res.status(400).json({
+                msg: `La categoría ${restCategory.name}, ya existe`
+            });
+            return;
+        }
+        restCategory.name = restCategory.name.toUpperCase();
+        yield category.update(restCategory);
+        res.status(200).json({
+            msg: 'Categoría actualizada'
+        });
     }
-    yield category.update(restCategory);
-    res.json({
-        msg: 'Categoría actualizada'
-    });
+    catch (error) {
+    }
 });
 exports.updateCategory = updateCategory;
 const deleteCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {

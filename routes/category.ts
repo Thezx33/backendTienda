@@ -7,6 +7,7 @@ import {
     getCategories,
     createCategory
 } from '../controllers/category';
+import { categoryExists } from '../helpers/db-validators';
 
 const router = Router();
 
@@ -20,12 +21,14 @@ router.post('/',[
 
 router.put('/:id', [
     validateJWT,
+    check('id').custom( categoryExists ),
     check('name', 'La categoría es obligatoria').not().isEmpty(),
     validateFields    
 ],updateCategory);
 
 router.delete('/:id',[
     validateJWT,
+    check('id').custom( categoryExists ),
     validateFields
 ],deleteCategory);
 

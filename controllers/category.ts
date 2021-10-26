@@ -2,19 +2,14 @@ import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 import Category from '../models/category';
 
-interface ICategory {
-    id?: number;
-    name: string;
-    state?: number;
-}
-
 export const getCategories = async ( req: Request, res: Response ) => {
 
     try {
         const categories = await Category.findAll({
             where: {
                 state: true
-            }
+            },
+            attributes: ['id', 'name', 'createdAt']
         });
     
         if( categories.length === 0 ) {
@@ -27,8 +22,10 @@ export const getCategories = async ( req: Request, res: Response ) => {
     
         }
     
-        res.json( categories );
+        res.status(200).json( { categories } );
+
     } catch (error: any) {
+
         console.log( error );
         res.status(500).json({
             msg: 'Hable con el administrador'
@@ -44,6 +41,8 @@ export const createCategory = async ( req: Request, res: Response ) => {
 
     try {
         
+        restCategory.name = restCategory.name.toUpperCase();
+
         const nameExists = await Category.findOne({
             where: {
                 name: restCategory.name
@@ -56,13 +55,14 @@ export const createCategory = async ( req: Request, res: Response ) => {
             });
             
             return;
+
         }
 
         const category = await Category.create( restCategory );
         
-        res.json( category );
+        res.status(201).json( category );
 
-    } catch (error: any) {
+    } catch ( error: any ) {
         
         console.log( error );
         res.status(500).json({
@@ -76,44 +76,54 @@ export const createCategory = async ( req: Request, res: Response ) => {
 export const updateCategory = async ( req: Request, res: Response ) => {
 
     const { id } = req.params;
-    const { id: bodyId, state, ...restCategory }: ICategory  = req.body;
+    const { id: bodyId, state, ...restCategory } = req.body;
 
-    const category = await Category.findOne({
-        where: {
-            [Op.and]: [
-                { id },
-                { state: true }
-            ]
-        }
-    });
-
-    if( !category ) {
-        res.status(404).json({
-            msg: `La categoría con el id ${ id } no existe`
+    try {
+     
+        const category = await Category.findOne({
+            where: {
+                [Op.and]: [
+                    { id },
+                    { state: true }
+                ]
+            }
         });
-        return;
-    }
-
-    restCategory.name = restCategory.name.toUpperCase();
-
-    const existsCategory = await Category.findOne({
-        where: {
-            name: restCategory.name
-        }
-    });
-
-    if( existsCategory ) {
-        res.status(400).json({
-            msg: `La categoría ${ restCategory.name }, ya existe`
-        });
-        return;
-    }
     
-    await category.update( restCategory );
+        if( !category ) {
+            res.status(404).json({
+                msg: `La categoría con el id ${ id } no existe`
+            });
+    
+            return;
+    
+        }
 
-    res.json({
-        msg: 'Categoría actualizada'
-    });
+        const existsCategory = await Category.findOne({
+            where: {
+                name: restCategory.name
+            }
+        });
+    
+        if( existsCategory ) {
+            res.status(400).json({
+                msg: `La categoría ${ restCategory.name }, ya existe`
+            });
+
+            return;
+        }
+
+        restCategory.name = restCategory.name.toUpperCase();
+
+        await category.update( restCategory );
+    
+        res.status(200).json({
+            msg: 'Categoría actualizada'
+        });
+        
+    } catch ( error: any ) {
+        
+    }
+
 }
 
 export const deleteCategory = async( req: Request, res: Response ) => {
