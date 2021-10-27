@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.categoryExists = exports.productExists = exports.phoneExists = exports.providerExists = exports.emailProviderExists = exports.userExists = exports.emailUserExists = void 0;
+exports.saleExists = exports.categoryExists = exports.productExists = exports.phoneExists = exports.providerExists = exports.emailProviderExists = exports.userExists = exports.emailUserExists = void 0;
 const user_1 = __importDefault(require("../models/user"));
 const provider_1 = __importDefault(require("../models/provider"));
 const product_1 = __importDefault(require("../models/product"));
 const category_1 = __importDefault(require("../models/category"));
+const sales_1 = __importDefault(require("../models/sales"));
 const emailUserExists = (email) => __awaiter(void 0, void 0, void 0, function* () {
     const emailExists = yield user_1.default.findOne({
         where: {
@@ -78,4 +79,11 @@ const categoryExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.categoryExists = categoryExists;
+const saleExists = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const saleExists = yield sales_1.default.findByPk(id);
+    if (!saleExists) {
+        throw new Error(`La venta con el id ${id} no existe`);
+    }
+});
+exports.saleExists = saleExists;
 //# sourceMappingURL=db-validators.js.map

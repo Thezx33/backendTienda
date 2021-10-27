@@ -1,8 +1,8 @@
 import User from '../models/user';
-import { Op } from 'sequelize';
 import Provider from '../models/provider';
 import Product from '../models/product';
 import Category from '../models/category';
+import Sales from '../models/sales';
 
 
 export const emailUserExists = async( email: string ): Promise<void> => {
@@ -84,6 +84,16 @@ export const categoryExists = async ( id: number ): Promise<void> => {
     if( !categoryExists ) {
         throw new Error( `La categoría con el id ${ id } no existe` );
         
+    }
+
+}
+
+export const saleExists = async ( id: number ): Promise<void> => {
+
+    const saleExists = await Sales.findByPk( id );
+
+    if( !saleExists ) {
+        throw new Error( `La venta con el id ${ id } no existe` );
     }
 
 }

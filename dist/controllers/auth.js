@@ -48,7 +48,8 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         // Generar JWT
         const token = yield (0, generar_jwt_1.generateJWT)(userId);
         res.json({
-            user,
+            msg: 'Logueado',
+            email: user.email,
             token
         });
     }

@@ -28,18 +28,18 @@ const Product = connection_1.default.define('Product', {
         allowNull: false,
         defaultValue: true
     },
-    userId: {
-        type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
-        allowNull: false
-    },
-    providerId: {
-        type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
-        allowNull: false
-    },
-    categoryId: {
-        type: sequelize_1.DataTypes.INTEGER.UNSIGNED,
-        allowNull: false
-    }
+    // userId: {
+    //     type: DataTypes.INTEGER.UNSIGNED,
+    //     allowNull: false
+    // },
+    // providerId: {
+    //     type: DataTypes.INTEGER.UNSIGNED,
+    //     allowNull: false
+    // },
+    // categoryId: {
+    //     type: DataTypes.INTEGER.UNSIGNED,
+    //     allowNull: false
+    // }
 }, {
     charset: 'utf8',
     collate: 'utf8_unicode_ci',

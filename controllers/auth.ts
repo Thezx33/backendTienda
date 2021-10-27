@@ -1,8 +1,18 @@
+import { Model } from 'sequelize';
 import User from "../models/user";
 import { generateJWT } from '../helpers/generar-jwt';
 import { Request, Response } from "express";
 import bcryptjs from 'bcryptjs';
 
+interface IUser extends Model {
+    state?: boolean;
+    id?: number;
+    name?: number;
+    email?: string;
+    password?: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
 
 export const login = async( req: Request, res: Response ) => {
 
@@ -11,7 +21,7 @@ export const login = async( req: Request, res: Response ) => {
     try {
         
         // Verificar si el email existe
-        const user = await User.findOne({
+        const user: IUser | null = await User.findOne({
             where: {
                 email
             }
@@ -46,7 +56,8 @@ export const login = async( req: Request, res: Response ) => {
         const token = await generateJWT( userId );
 
         res.json({
-            user,
+            msg: 'Logueado',
+            email: user.email,
             token
         });
 

@@ -25,18 +25,18 @@ const Product = db.define('Product', {
         allowNull: false,
         defaultValue: true
     },
-    userId: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false
-    },
-    providerId: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false
-    },
-    categoryId: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false
-    }
+    // userId: {
+    //     type: DataTypes.INTEGER.UNSIGNED,
+    //     allowNull: false
+    // },
+    // providerId: {
+    //     type: DataTypes.INTEGER.UNSIGNED,
+    //     allowNull: false
+    // },
+    // categoryId: {
+    //     type: DataTypes.INTEGER.UNSIGNED,
+    //     allowNull: false
+    // }
 },{
     charset: 'utf8',
     collate: 'utf8_unicode_ci',

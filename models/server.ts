@@ -8,6 +8,8 @@ import userRoutes from '../routes/user';
 import providerRoutes from '../routes/provider';
 import authRoutes from '../routes/auth';
 import categoryRoutes from '../routes/category';
+import salesRoutes from '../routes/sales';
+import detailSalesRoutes from '../routes/detail-sales';
 
 // Conexión
 import db from '../db/connection';
@@ -21,7 +23,9 @@ class Server {
         users: '/api/users',
         providers: '/api/providers',
         auth: '/api/auth',
-        category: '/api/category'
+        categories: '/api/categories',
+        sales: '/api/sales',
+        detailSales: '/api/details'
     }
 
     constructor() {
@@ -76,7 +80,9 @@ class Server {
         this.app.use( this.apiPaths.users, userRoutes );
         this.app.use( this.apiPaths.providers, providerRoutes );
         this.app.use( this.apiPaths.auth, authRoutes );
-        this.app.use( this.apiPaths.category, categoryRoutes );
+        this.app.use( this.apiPaths.categories, categoryRoutes );
+        this.app.use( this.apiPaths.sales, salesRoutes );
+        this.app.use( this.apiPaths.detailSales, detailSalesRoutes );
 
     }
 
@@ -84,7 +90,7 @@ class Server {
 
         this.app.listen( this.port, () => {
             console.log(`Servidor corriendo en el puerto ${ this.port }`);
-        })
+        });
 
     }
 

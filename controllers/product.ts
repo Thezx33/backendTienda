@@ -90,7 +90,7 @@ export const getProductId = async( req: Request, res: Response ) => {
     
     // console.log( product );
     
-    res.json( product );
+    res.json( { product } );
 
 }
 

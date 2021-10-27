@@ -92,7 +92,7 @@ const getProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return;
     }
     // console.log( product );
-    res.json(product);
+    res.json({ product });
 });
 exports.getProductId = getProductId;
 // export const getProductsName = async( req: Request, res: Response ) => {
